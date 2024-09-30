@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Date Validation</title>
+  <style>
+    .error {
+      color: red;
+    }
+    .success {
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <h3>Enter Date (MM-DD-YYYY format)</h3>
+  <input type="text" id="date" placeholder="MM-DD-YYYY">
+  <div id="error" class="error"></div>
+  <div id="validresult" class="success"></div>
+
+  <script>
+    function isLeapYear(year) {
+      return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+    }
+
+    function validateDate() {
+      const dateInput = document.getElementById('date').value;
+      const errorDiv = document.getElementById('error');
+      const resultDiv = document.getElementById('validresult');
+
+      errorDiv.textContent = '';
+      resultDiv.textContent = '';
+
+      const dateRegex = /^(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])-(\d{4})$/;
+      if (!dateRegex.test(dateInput)) {
+        errorDiv.textContent = 'Please enter date in MM-DD-YYYY format';
+        return;
+      }
+
+      const [month, day, year] = dateInput.split('-').map(Number);
+
+      if (month < 1 || month > 12) {
+        errorDiv.textContent = 'Invalid month. Month should be within the range 1 to 12';
+        return;
+      }
+
+      const daysInMonth = [31, isLeapYear(year) ? 29 : 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+      if (day < 1 || day > daysInMonth[month - 1]) {
+        errorDiv.textContent = `Invalid day. ${month === 2 ? 'February' : 'This month'} should have days within the range 1 to ${daysInMonth[month - 1]}`;
+        return;
+      }
+
+      resultDiv.textContent = `You have entered a valid date. Its "${dateInput}". Thank you.`;
+    }
+
+    document.getElementById('date').addEventListener('input', validateDate);
+  </script>
+
+</body>
+</html>
