@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Math Operations</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Calculator</h2>
+        <div class="form-group">
+            <label for="firstnumber">Please enter first number:</label>
+            <input type="text" id="firstnumber" />
+            <div id="firstname-error" class="error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="secondnumber">Please enter second number:</label>
+            <input type="text" id="secondnumber" />
+            <div id="lastname-error" class="error"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Please select operation you want to perform:</label>
+            <div class="radio-group">
+                <label><input type="radio" name="operation" value="addition" /> Addition</label>
+                <label><input type="radio" name="operation" value="subtraction" /> Subtraction</label>
+                <label><input type="radio" name="operation" value="multiplication" /> Multiplication</label>
+                <label><input type="radio" name="operation" value="division" /> Division</label>
+            </div>
+            <div id="operation-error" class="error"></div>
+        </div>
+
+        <button id="getresult" onclick="calculate()">Calculate</button>
+        <button id="reset" onclick="resetForm()">Reset</button>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function isNumeric(value) {
+            return !isNaN(value) && value.trim() !== '';
+        }
+
+        function calculate() {
+            document.getElementById('firstname-error').innerText = '';
+            document.getElementById('lastname-error').innerText = '';
+            document.getElementById('operation-error').innerText = '';
+            document.getElementById('result').innerText = '';
+
+            const firstNumber = document.getElementById('firstnumber').value;
+            const secondNumber = document.getElementById('secondnumber').value;
+            const operation = document.querySelector('input[name="operation"]:checked');
+
+            let hasError = false;
+
+            if (!firstNumber) {
+                document.getElementById('firstname-error').innerText = 'Please enter first Number';
+                hasError = true;
+            } else if (!isNumeric(firstNumber)) {
+                document.getElementById('firstname-error').innerText = 'Please enter valid number';
+                hasError = true;
+            }
+
+            if (!secondNumber) {
+                document.getElementById('lastname-error').innerText = 'Please enter second Number';
+                hasError = true;
+            } else if (!isNumeric(secondNumber)) {
+                document.getElementById('lastname-error').innerText = 'Please enter valid number';
+                hasError = true;
+            }
+
+            if (!operation) {
+                document.getElementById('operation-error').innerText = 'Select any of the operation';
+                hasError = true;
+            }
+
+            if (!hasError) {
+                const num1 = parseFloat(firstNumber);
+                const num2 = parseFloat(secondNumber);
+                let result = 0;
+
+                switch (operation.value) {
+                    case 'addition':
+                        result = num1 + num2;
+                        break;
+                    case 'subtraction':
+                        result = num1 - num2;
+                        break;
+                    case 'multiplication':
+                        result = num1 * num2;
+                        break;
+                    case 'division':
+                        if (num2 === 0) {
+                            document.getElementById('result').innerText = 'Division by zero is not allowed';
+                            return;
+                        }
+                        result = num1 / num2;
+                        break;
+                }
+
+                document.getElementById('result').innerText = `Result is: ${result}`;
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('firstnumber').value = '';
+            document.getElementById('secondnumber').value = '';
+            document.querySelectorAll('input[name="operation"]').forEach(el => el.checked = false);
+            document.getElementById('result').innerText = '';
+            document.getElementById('firstname-error').innerText = '';
+            document.getElementById('lastname-error').innerText = '';
+            document.getElementById('operation-error').innerText = '';
+        }
+    </script>
+</body>
+</html>
