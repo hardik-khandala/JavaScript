@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Invoice Table</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        table, th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        h2 {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Invoice</h2>
+
+<!-- Seller and Buyer Information Table -->
+<table id="details-table">
+    <thead>
+        <tr>
+            <th>Seller Details</th>
+            <th>Buyer Details</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td id="seller-details"></td>
+            <td id="buyer-details"></td>
+        </tr>
+    </tbody>
+</table>
+
+<!-- Itemized Invoice Details Table -->
+<table id="invoice-table">
+    <thead>
+        <tr>
+            <th>Item Name</th>
+            <th>Description</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Tax</th>
+            <th>Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Table rows will be added dynamically -->
+    </tbody>
+</table>
+
+<script>
+    // Sample JSON data
+    const sampleJson = [
+        {
+            "SellerDetails": {
+                "SellerName": "Ravi Gupta",
+                "SellerAddress": "Surdhara Complex, Naranpura",
+                "City": "Ahmedabad",
+                "State": "Gujarat",
+                "Zip": 382481,
+                "Phone": 8989898989,
+                "Email": "seller@gmail.com"
+            },
+            "BuyerDetails": {
+                "CompanyName": "Radixweb",
+                "Name": "Nitish Patel",
+                "Address": "B/H Nirma University, Ekyarth, Near Vandemataram Fabula, Malabar County Rd",
+                "City": "Ahmedabad",
+                "State": "Gujarat",
+                "Zip": 382481,
+                "Phone": 98989898,
+                "Email": "buyer@gmail.com"
+            },
+            "ItemDetails": [
+                {
+                    "ItemName": "Item1",
+                    "Description": "Description",
+                    "Quntity": 1,
+                    "Price": "$100",
+                    "Tax": "10%",
+                    "Amount": "$110"
+                },
+                {
+                    "ItemName": "Item2",
+                    "Description": "Description",
+                    "Quntity": 1,
+                    "Price": "$200",
+                    "Tax": "20%",
+                    "Amount": "$240"
+                },
+                {
+                    "ItemName": "Item3",
+                    "Description": "Description",
+                    "Quntity": 3,
+                    "Price": "$300",
+                    "Tax": "10%",
+                    "Amount": "$990"
+                }
+                // More items can be added here...
+            ]
+        }
+    ];
+
+    // Extract details from the JSON
+    const sellerDetails = sampleJson[0].SellerDetails;
+    const buyerDetails = sampleJson[0].BuyerDetails;
+    const itemDetails = sampleJson[0].ItemDetails;
+
+    // Populate seller and buyer details in table format
+    document.getElementById('seller-details').innerHTML = `
+        <strong>Name:</strong> ${sellerDetails.SellerName}<br>
+        <strong>Address:</strong> ${sellerDetails.SellerAddress}<br>
+        <strong>City:</strong> ${sellerDetails.City}<br>
+        <strong>State:</strong> ${sellerDetails.State}<br>
+        <strong>Zip:</strong> ${sellerDetails.Zip}<br>
+        <strong>Phone:</strong> ${sellerDetails.Phone}<br>
+        <strong>Email:</strong> ${sellerDetails.Email}
+    `;
+
+    document.getElementById('buyer-details').innerHTML = `
+        <strong>Company:</strong> ${buyerDetails.CompanyName}<br>
+        <strong>Name:</strong> ${buyerDetails.Name}<br>
+        <strong>Address:</strong> ${buyerDetails.Address}<br>
+        <strong>City:</strong> ${buyerDetails.City}<br>
+        <strong>State:</strong> ${buyerDetails.State}<br>
+        <strong>Zip:</strong> ${buyerDetails.Zip}<br>
+        <strong>Phone:</strong> ${buyerDetails.Phone}<br>
+        <strong>Email:</strong> ${buyerDetails.Email}
+    `;
+
+    // Populate item details in table format
+    const tableBody = document.querySelector('#invoice-table tbody');
+    itemDetails.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${item.ItemName}</td>
+            <td>${item.Description}</td>
+            <td>${item.Quntity}</td>
+            <td>${item.Price}</td>
+            <td>${item.Tax}</td>
+            <td>${item.Amount}</td>
+        `;
+        tableBody.appendChild(row);
+    });
+</script>
+
+</body>
+</html>
