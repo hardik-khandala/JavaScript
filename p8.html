@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dynamic Navigation Menu</title>
+</head>
+<body>
+  <nav id="navigation">
+    <ul></ul>
+  </nav>
+
+  <section id="section1">Section 1</section>
+  <section id="section2">Section 2</section>
+  <section id="section3">Section 3</section>
+</body>
+<script>
+  const menuItems = ['Section 1', 'Section 2', 'Section 3'];
+  const navigation = document.getElementById('navigation');
+  const ul = navigation.querySelector('ul');
+
+  menuItems.forEach(item => {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = `#section${item.replace(/\s/g, '')}`;
+    a.textContent = item;
+    li.appendChild(a);
+    ul.appendChild(li);
+  });
+
+  document.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      const targetSection = document.getElementById(link.hash.substring(1));
+      targetSection.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+</html>
