@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drink List</title>
+    <style>
+        /* Style for dropdown */
+        #ingredientDropdown {
+            margin: 20px;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        /* Container for the cards */
+        .drink-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        /* Card style */
+        .card {
+            width: 200px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        /* Colors based on drink category */
+        .cocktail {
+            background-color: green;
+        }
+
+        .ordinary-drink {
+            background-color: lightcoral;
+        }
+
+        .other-unknown {
+            background-color: lightyellow;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dropdown for selecting ingredients -->
+    <select id="ingredientDropdown">
+        <option value="">--Select Ingredient--</option>
+        <option value="Watermelon">Watermelon</option>
+        <option value="Grapefruit Juice">Grapefruit Juice</option>
+        <option value="Mint">Mint</option>
+        <option value="Strawberries">Strawberries</option>
+        <option value="Lemon juice">Lemon juice</option>
+        <option value="Triple sec">Triple sec</option>
+        <option value="Ice">Ice</option>
+        <option value="Lime juice">Lime juice</option>
+        <option value="Tequila">Tequila</option>
+    </select>
+
+    <!-- Div to display the drinks -->
+    <div class="drink-container" id="drinkContainer"></div>
+
+    <script>
+        // Fetch data from API
+        const fetchData = async () => {
+            const response = await fetch('https://res.cloudinary.com/des3si8bs/raw/upload/v1679912721/drinks_y1vudo.json');
+            const data = await response.json();
+            return data.drinks;
+        };
+
+        // Map categories to colors
+        const getCategoryClass = (category) => {
+            switch (category) {
+                case 'Cocktail': return 'cocktail';
+                case 'Ordinary Drink': return 'ordinary-drink';
+                default: return 'other-unknown';
+            }
+        };
+
+        // Render the drinks
+        const renderDrinks = (drinks) => {
+            const drinkContainer = document.getElementById('drinkContainer');
+            drinkContainer.innerHTML = ''; // Clear previous cards
+
+            drinks.forEach(drink => {
+                const card = document.createElement('div');
+                card.classList.add('card', getCategoryClass(drink.strCategory));
+
+                card.innerHTML = `
+                    <img src="${drink.strDrinkThumb}" alt="${drink.strDrink}">
+                    <h3>${drink.strDrink}</h3>
+                    <p>${drink.strInstructions}</p>
+                `;
+
+                drinkContainer.appendChild(card);
+            });
+        };
+
+        // Filter drinks by ingredient
+        const filterDrinks = (drinks, ingredient) => {
+            return drinks.filter(drink => drink.strIngredient2 === ingredient);
+        };
+
+        // Initialize dropdown and event listeners
+        const init = async () => {
+            const drinks = await fetchData();
+
+            const dropdown = document.getElementById('ingredientDropdown');
+            dropdown.addEventListener('change', (event) => {
+                const selectedIngredient = event.target.value;
+                const filteredDrinks = selectedIngredient ? filterDrinks(drinks, selectedIngredient) : drinks;
+                renderDrinks(filteredDrinks);
+            });
+
+            // Initial render of all drinks
+            renderDrinks(drinks);
+        };
+
+        // Start the application
+        init();
+    </script>
+</body>
+</html>
