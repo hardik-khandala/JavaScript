@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Math Operations</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Calculator</h2>
+        <div class="form-group">
+            <label for="firstnumber">Please enter first number:</label>
+            <input type="text" id="firstnumber" />
+            <div id="firstnumber-error" class="error"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="secondnumber">Please enter second number:</label>
+            <input type="text" id="secondnumber" />
+            <div id="secondnumber-error" class="error"></div>
+        </div>
+
+        <div class="form-group">
+            <label>Please select operation you want to perform:</label>
+            <div class="radio-group">
+                <label><input type="radio" name="operation" value="addition" /> Addition</label>
+                <label><input type="radio" name="operation" value="subtraction" /> Subtraction</label>
+                <label><input type="radio" name="operation" value="multiplication" /> Multiplication</label>
+                <label><input type="radio" name="operation" value="division" /> Division</label>
+            </div>
+            <div id="operation-error" class="error"></div>
+        </div>
+        
+        <button id="getresult" onclick="calculate()">Calculate</button>
+        <button id="reset" onclick="resetForm()">Reset</button>
+        <p id="result"></p>
+
+    </div>
+    <script type="text/javascript" src="main.js"></script>
+
+</body>
+</html>
