@@ -144,7 +144,7 @@ function addCustomer() {
     phnoErr.innerText = "Phone Number Required";
     isValid = false;
   } else if (phno.length !== 10 || !/^\d{10}$/.test(phno)) {
-    phnoErr.innerText = "Phone Number length must be 10";
+    phnoErr.innerText = "Phone Number must be 10 digits";
     isValid = false;
   }
 
@@ -153,7 +153,7 @@ function addCustomer() {
     cnameErr.innerText = "Customer Name Required";
     isValid = false;
   } else if (name.length < 3 || name.length > 10) {
-    cnameErr.innerText = "Customer Name length should be at least 3 characters and at most 10 characters";
+    cnameErr.innerText = "Customer Name length should be between 3 and 10 characters";
     isValid = false;
   }
 
@@ -162,10 +162,9 @@ function addCustomer() {
     const success = travelCalc.addCustomer(newCustomer);
     if (success) {
       alert('Customer added successfully');
-      addToLocalStorage();
       redirectToHomePage();
     } else {
-      cnoErr.innerText = "Customer Number Already Present";
+      cnoErr.innerText = "Customer Number Already Exists";
     }
   }
 }
@@ -189,7 +188,7 @@ function addTicket() {
 
   // Validate Customer Number
   if (!selectedCno) {
-    customerNumberError.innerText = "Select customer Number";
+    customerNumberError.innerText = "Select Customer Number";
     isValid = false;
   }
 
@@ -200,7 +199,7 @@ function addTicket() {
   } else {
     const ticketCost = Number(ticketCostStr);
     if (isNaN(ticketCost) || ticketCost <= 0) {
-      ticketCostError.innerText = "Ticket Cost must be positive";
+      ticketCostError.innerText = "Ticket Cost must be a positive number";
       isValid = false;
     }
   }
@@ -211,7 +210,6 @@ function addTicket() {
     const success = travelCalc.addTicketToCustomer(selectedCno, newTicket);
     if (success) {
       alert('Ticket added successfully');
-      travelCalc.saveToLocalStorage();
       redirectToHomePage();
     } else {
       customerNumberError.innerText = "Customer not found";
@@ -219,10 +217,14 @@ function addTicket() {
   }
 }
 
-// Function to populate customer dropdown in Ticket Form
+// Utility Functions
+function redirectToHomePage() {
+  window.location.href = "index.html"; // Adjust the path based on your project structure
+}
+
 function populateCustomerDropdown() {
   const customerSelect = document.getElementById('customerNumber') as HTMLSelectElement;
-  customerSelect.innerHTML = '<option value="">Select Customer</option>'; // default option
+  customerSelect.innerHTML = '<option value="">Select Customer</option>';
 
   travelCalc.getAllCustomers().forEach(customer => {
     const option = document.createElement('option');
@@ -232,104 +234,7 @@ function populateCustomerDropdown() {
   });
 }
 
-// Function to display customers and their tickets on Home Page
-function displayCustomers() {
-  const mainTableBody = document.getElementById('CustomerTableBody') as HTMLTableSectionElement;
-  if (!mainTableBody) return;
-
-  mainTableBody.innerHTML = ""; // Clear existing rows
-
-  travelCalc.getAllCustomers().forEach(customer => {
-    const tr = document.createElement('tr');
-
-    // Customer details
-    const cnoTd = document.createElement('td');
-    cnoTd.innerText = customer.cno;
-    tr.appendChild(cnoTd);
-
-    const phnoTd = document.createElement('td');
-    phnoTd.innerText = customer.phno.toString();
-    tr.appendChild(phnoTd);
-
-    const nameTd = document.createElement('td');
-    nameTd.innerText = customer.name;
-    tr.appendChild(nameTd);
-
-    // Ticket History (Nested Table)
-    const ticketTd = document.createElement('td');
-    const nestedTable = document.createElement('table');
-    nestedTable.id = `nestedTable-${customer.cno}`;
-    nestedTable.border = "1";
-
-    const nestedThead = document.createElement('thead');
-    const headerRow = document.createElement('tr');
-    const costHeader = document.createElement('th');
-    costHeader.innerText = "Ticket Cost";
-    const discountedCostHeader = document.createElement('th');
-    discountedCostHeader.innerText = "Discounted Cost";
-    headerRow.appendChild(costHeader);
-    headerRow.appendChild(discountedCostHeader);
-    nestedThead.appendChild(headerRow);
-    nestedTable.appendChild(nestedThead);
-
-    const nestedTbody = document.createElement('tbody');
-    customer.tickets.forEach(ticket => {
-      const ticketRow = document.createElement('tr');
-      const costTd = document.createElement('td');
-      costTd.innerText = ticket.cost.toFixed(2);
-      const discountedCostTd = document.createElement('td');
-      discountedCostTd.innerText = ticket.computeOverallPrice().toFixed(2);
-      ticketRow.appendChild(costTd);
-      ticketRow.appendChild(discountedCostTd);
-      nestedTbody.appendChild(ticketRow);
-    });
-    nestedTable.appendChild(nestedTbody);
-    ticketTd.appendChild(nestedTable);
-    tr.appendChild(ticketTd);
-
-    mainTableBody.appendChild(tr);
-  });
-}
-
-// Function to add to localStorage (handled by TravelCalc)
-function addToLocalStorage() {
-  travelCalc.saveToLocalStorage();
-}
-
-// Function to redirect to Home Page
-function redirectToHomePage() {
-  window.location.href = "/"; // Adjust the path as necessary
-}
-
-// Function to initialize Navbar click events
-function initializeNavbar() {
-  const homeLink = document.getElementById('home') as HTMLAnchorElement;
-  const customerFormLink = document.getElementById('customerForm') as HTMLAnchorElement;
-  const ticketFormLink = document.getElementById('ticketForm') as HTMLAnchorElement;
-
-  homeLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.location.href = "/";
-  });
-
-  customerFormLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.location.href = "/customerForm.html";
-  });
-
-  ticketFormLink.addEventListener('click', (e) => {
-    e.preventDefault();
-    window.location.href = "/ticketForm.html";
-  });
-}
-
-// Event Listeners for forms
-document.getElementById('addCustomerFormBtn')?.addEventListener('click', addCustomer);
-document.getElementById('ticketFormSubmitBtn')?.addEventListener('click', addTicket);
-
-// On page load
+// Page Initialization
 window.onload = () => {
-  initializeNavbar();
   populateCustomerDropdown();
-  displayCustomers();
 };
